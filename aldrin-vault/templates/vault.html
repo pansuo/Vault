@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="/stylesheets/vault.css"/>
+
+        <title>
+            Vault
+        </title>
+    </head>
+    <body>
+    <div id="filedrag">
+        <div id="title">
+            VAULT
+        </div>
+        <div id="form_container">
+            <form id="upload" action="{{upload_url}}" method="POST" enctype="multipart/form-data">
+                <input id="passphrase_form" type="text" name="passphrase" placeholder="passphrase" value="">
+                <br>
+                <br>
+                <input type="file" id="fileselect" name="fileselect[]" />
+                <br>
+                <input  type="submit" id="submit_button" value="Enter" />
+            </form>
+        </div>
+
+        <div id="">
+            <div id="messages"></div>
+        </div>
+
+        <div id="instructions">
+            <br>
+            <br>
+            Enter your passphrase to get your file or a friend's file
+            <br>
+            <strong>OR</strong>
+            <br>
+            1. Drag and drop a file anywhere.
+            <br>
+            2. Enter a passphrase.
+            <br>
+            3. Upload.
+        </div>
+    </div>
+        <script type="text/javascript" src="/scripts/script.jsa"></script>
+    </body>
+
+</html>
