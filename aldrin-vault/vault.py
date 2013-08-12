@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import webapp2, jinja2, os, hashlib, hmac, string, sys, logging, urllib
+import webapp2, jinja2, os, hashlib, hmac, string, sys, logging, urllib, VaultHash, time
 
 from google.appengine.api import files
 from google.appengine.ext import db
@@ -30,23 +30,36 @@ class FrontPageHandler(BaseHandler):
 
     def post(self):
         user_passphrase = self.request.get('passphrase')
-        self.write(self.request)
+        passphrase_hash = VaultHash.hash(user_passphrase)
+        self.response.headers.add_header('Set-Cookie', 'passphrase=%s; Path=/' % passphrase_hash)
+        self.redirect('/stash')
 
-
-
-
-
+class StashHandler(BaseHandler):
+    def get(self):
+        passphrase_cookie = self.request.cookies.get('passphrase')
+        files = db.GqlQuery("SELECT * FROM Passphrase WHERE passphrase = :1", passphrase_cookie)
+        #self.response.headers.add_header('Set-Cookie', 'passphrase=; Path=/')
+        if files:
+            files = list(files)
+        self.render('stash.html', files=files)
 
 class Passphrase(db.Model):
     passphrase = db.StringProperty(required=True)
     blob_key = blobstore.BlobReferenceProperty()
 
-class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
+class UploadHandler(blobstore_handlers.BlobstoreUploadHandler, BaseHandler):
     def post(self):
         upload_files = self.get_uploads()
+        user_passphrase = self.request.get('passphrase')
+        user_passphrase = VaultHash.hash(user_passphrase)
+        if not user_passphrase or not upload_files:
+            self.redirect('/')
+            return
         blob_info = upload_files[0]
         logging.error(blob_info)
-        self.redirect('/serve/%s' % blob_info.key())
+        passphrase = Passphrase(blob_key=blob_info.key(), passphrase=user_passphrase)
+        passphrase.put()
+        self.redirect('/success')
 
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self, resource):
@@ -54,12 +67,13 @@ class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
         blob_info = blobstore.BlobInfo.get(resource)
         self.send_blob(blob_info)
 
-
-
-
-
+class SuccessHandler(BaseHandler):
+    def get(self):
+        self.write("File uploaded successfully.")
 
 app = webapp2.WSGIApplication([('/', FrontPageHandler), 
                                ('/serve/([^/]+)?', ServeHandler), 
-                               ('/upload', UploadHandler)
+                               ('/upload', UploadHandler), 
+                               ('/success', SuccessHandler), 
+                               ('/stash', StashHandler)
                               ], debug=True)

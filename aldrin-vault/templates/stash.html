@@ -1,0 +1,44 @@
+<!DOCTYPE>
+
+<html>
+    <head>
+        <meta http-equiv="Cache-Control" content="no-cache">                                 
+        <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/vault.css"/>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="/scripts/script.js"></script>
+        <title>
+            Stash
+        </title>
+
+
+    </head>
+
+    <body id="stash_body">
+        <div id="stash_title">
+            STASH
+        </div>
+        <div>
+            <table class="stash_table"> 
+            {% for file in files %}
+                <tr>
+                    <td>
+                        {{file.blob_key.key()}}
+                    </td>
+                    <td>
+                        <a href='/serve/{{file.blob_key.key()}}'><strong>Download</strong></a>
+                    </td>
+                </tr>
+            {% else %}
+                <div class="stash_error">
+                    Empty
+                </div>
+            {% endfor %}
+            </table>
+            <br>
+            <div class="stash_vault_link">
+                <a href='/'>Back</a>
+            </div>
+        </div>
+    </body>
+</html>

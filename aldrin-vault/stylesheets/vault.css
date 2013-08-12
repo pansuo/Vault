@@ -4,10 +4,17 @@
 }
 
 body, html {
-    background-color: #a30006;
     margin: 0 auto;
     height: 98%;
     width: 98%;
+}
+
+#vault_body {
+    background-color: #a30006;
+}
+
+#stash_body {
+    background-color: #4C9B45;
 }
 
 #title {
@@ -15,25 +22,30 @@ body, html {
     font-size: 140px;
     color: white;
     text-align: center;
-    margin: 100px 0 0 0;
+    margin: 0 0 0 0;
 }
 
-form {
+#stash_title {
+    font-weight: 400;
+    font-size: 140px;
+    color: white;
+    text-align: center;
+    margin: 0 0 0 0;
 }
 
-#form_container {
+.base_form_class {
     text-align: center;
 }
 
-#passphrase_form {
+.passphrase_input {
     font-size: 20px;
     text-align: center;
     border-radius: 10px;
+    border: 1px solid black;
     color: gray;
 }
 
-#submit_button {
-    margin-top: 15px;
+.submit_button {
     font-size: 16px;
     border-radius: 8px;
     border: 1px black solid;
@@ -48,19 +60,51 @@ form {
     color: #1c0113;
 }
 
-#filedrag.hover {
+#upload_form {
+    display: none;
 }
 
-input[type='file'] {
-    width: 75px;
-}
-
-#filedrag {
-    width: 100%;
-    height: 100%;
+.choose_buttons {
     text-align: center;
+}
+
+.stash_error {
+    text-align: center;
+    font-size: 40px;
+    color: #a30006;
+}
+
+.stash_table {
+    width: 500px;
+    margin: 0 auto;
+    background-color: #EDEDF4;
     border-radius: 10px;
 }
 
+.stash_vault_link {
+    text-align: center;
+    color: #a30006;
+    font-size: 20px;
+}
 
+td {
+    padding: 6px 6px 6px 6px;
+    font-size: 20px;
+}
 
+tr {
+    border-radius: 10px;
+}
+
+tr:hover {
+    background-color: #9ED54C;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:link{color:inherit}
+a:active{color:inherit}
+a:visited{color:inherit}
+a:hover{color:inherit}
