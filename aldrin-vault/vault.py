@@ -39,13 +39,14 @@ class StashHandler(BaseHandler):
         passphrase_cookie = self.request.cookies.get('passphrase')
         files = db.GqlQuery("SELECT * FROM Passphrase WHERE passphrase = :1", passphrase_cookie)
         #self.response.headers.add_header('Set-Cookie', 'passphrase=; Path=/')
-        if files:
-            files = list(files)
-        self.render('stash.html', files=files)
+        files = list(files)
+        files = [entity.blob.key() for entity in files]
+        infos = blobstore.BlobInfo.get(files)
+        self.render('stash.html', files=infos)
 
 class Passphrase(db.Model):
     passphrase = db.StringProperty(required=True)
-    blob_key = blobstore.BlobReferenceProperty()
+    blob = blobstore.BlobReferenceProperty()
 
 class UploadHandler(blobstore_handlers.BlobstoreUploadHandler, BaseHandler):
     def post(self):
@@ -57,7 +58,7 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler, BaseHandler):
             return
         blob_info = upload_files[0]
         logging.error(blob_info)
-        passphrase = Passphrase(blob_key=blob_info.key(), passphrase=user_passphrase)
+        passphrase = Passphrase(blob=blob_info.key(), passphrase=user_passphrase)
         passphrase.put()
         self.redirect('/success')
 
@@ -65,11 +66,11 @@ class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self, resource):
         resource = str(urllib.unquote(resource))
         blob_info = blobstore.BlobInfo.get(resource)
-        self.send_blob(blob_info)
+        self.send_blob(blob_info, save_as=True)
 
 class SuccessHandler(BaseHandler):
     def get(self):
-        self.write("File uploaded successfully.")
+        self.render('success.html')
 
 app = webapp2.WSGIApplication([('/', FrontPageHandler), 
                                ('/serve/([^/]+)?', ServeHandler), 
