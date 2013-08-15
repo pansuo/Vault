@@ -70,6 +70,7 @@ body, html {
 
 .choose_buttons {
     text-align: center;
+    font-size: 24px;
 }
 
 .stash_error {
@@ -79,7 +80,7 @@ body, html {
 }
 
 .stash_table {
-    width: 500px;
+    width: 600px;
     margin: 0 auto;
     background-color: #EDEDF4;
     border-radius: 10px;
@@ -94,14 +95,17 @@ body, html {
 td {
     padding: 6px 6px 6px 6px;
     font-size: 20px;
+
 }
 
 tr {
     border-radius: 10px;
+    border: none;
 }
 
 tr:hover {
     background-color: #9ED54C;
+    border-radius: 10px;
 }
 
 a {
