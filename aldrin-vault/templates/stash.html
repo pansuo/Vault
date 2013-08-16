@@ -27,8 +27,17 @@
                         {{file.filename}}
                     </td>
                     <td>
-                        <a href='/serve/{{file.key()}}'><strong>Download</strong></a>
+                        <form action='serve/{{file.key()}}' class="stash_form">
+                            <input class="stash_button download_button" type='submit' value='Download'>
+                        </form>
                     </td>
+                    <td>
+                        <form method="POST" class="stash_form">
+                            <input class="stash_button delete_button" type='submit' value='Delete'>
+                        </form>
+
+                    </td>
+
                 </tr>
             {% else %}
                 <div class="stash_error">
