@@ -37,12 +37,22 @@ class FrontPageHandler(BaseHandler):
 class StashHandler(BaseHandler):
     def get(self):
         passphrase_cookie = self.request.cookies.get('passphrase')
-        files = db.GqlQuery("SELECT * FROM Passphrase WHERE passphrase = :1", passphrase_cookie)
+        passphrases = db.GqlQuery("SELECT * FROM Passphrase WHERE passphrase = :1", passphrase_cookie)
         #self.response.headers.add_header('Set-Cookie', 'passphrase=; Path=/')
-        files = list(files)
-        files = [entity.blob.key() for entity in files]
+        passphrases = list(passphrases)
+        files = [entity.blob.key() for entity in passphrases]
         infos = blobstore.BlobInfo.get(files)
         self.render('stash.html', files=infos)
+
+    def post(self):
+        file_id = self.request.get('file_id')
+        blob_info = blobstore.BlobInfo.get(file_id)
+        passphrase = db.GqlQuery("SELECT * FROM Passphrase WHERE blob = :1", blob_info.key()).get()
+        blob_info.delete()
+        passphrase.delete()
+        self.redirect('/')
+
+
 
 class Passphrase(db.Model):
     passphrase = db.StringProperty(required=True)

@@ -20,6 +20,12 @@
             STASH
         </div>
         <div>
+            {% for entity in passphrases %}
+            <div>{{entity.blob.key()}}
+                 {{blobstore.BlobInfo.get(entity.blob.key()).filename}}
+            </div>
+            {% endfor %}
+
             <table class="stash_table"> 
             {% for file in files %}
                 <tr>
@@ -33,6 +39,7 @@
                     </td>
                     <td>
                         <form method="POST" class="stash_form">
+                            <input style="display: none;" type="text" name="file_id" value="{{file.key()}}">
                             <input class="stash_button delete_button" type='submit' value='Delete'>
                         </form>
 
