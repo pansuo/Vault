@@ -20,12 +20,6 @@
             STASH
         </div>
         <div>
-            {% for entity in passphrases %}
-            <div>{{entity.blob.key()}}
-                 {{blobstore.BlobInfo.get(entity.blob.key()).filename}}
-            </div>
-            {% endfor %}
-
             <table class="stash_table"> 
             {% for file in files %}
                 <tr>
